@@ -11,10 +11,21 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/models": ["./models"],
+      "@/repositories": ["./repositories"],
+      "@/services": ["./services"],
+      "@/controllers": ["./controllers"],
+      "@/middleware": ["./middleware"],
+      "@/routes": ["./routes"],
+      "@/types": ["./types"],
+      "@/utils": ["./utils"],
+      "@/validators": ["./validators"],
+      "@/exceptions": ["./exceptions"]
     },
     "typeRoots": [
      "./node_modules/@types", 
+     "./src/types"
     ],
   },
   "include": ["src/**/*", "src/tests"],           

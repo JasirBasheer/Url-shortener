@@ -1,19 +1,21 @@
 import 'reflect-metadata';
-import { connectDB } from './config/db.config';
-import { env } from './config/env.config';
 import { createApp } from './app';
+import { connectDB } from './config/db';
+import { env } from './config/env';
+import { registerDependencies } from './di';
 
 
 const startServer = async () => {
   try {
     await connectDB();
+    registerDependencies();
 
     const app = createApp()
     app.listen(env.CONFIG.PORT, () => {
-      console.log(` ${env.CONFIG.PORT} `);
+      console.log(`Server is running on port ${env.CONFIG.PORT}`);
     });
   } catch (error) {
-    console.error("ERROR_MESSAGES.NETWORK.FAILED_TO_START_SERVER", error);
+    console.error("Failed to start server", error);
     process.exit(1);
   }
 };
