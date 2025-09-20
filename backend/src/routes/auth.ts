@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { validateSchema } from '../middleware/implementation/schemaValidation';
-import { authLimiter } from '../utils/rate-limiter';
-import { IAuthController, IAuthMiddleware } from '../repositories';
+
 import { 
   signUpSchema, 
   signInSchema, 
 } from '../validators';
 import { container } from 'tsyringe';
-
+import { IAuthMiddleware } from '@/middleware/interface/IAuthMiddleware';
+import { IAuthController } from '@/controllers/interface/IAuthController';
 
 
 export const createAuthRoutes = () => {
@@ -16,9 +16,9 @@ export const createAuthRoutes = () => {
   
   const router = Router();
   
-  router.post('/signup', authLimiter, validateSchema(signUpSchema), authController.signUp);
-  router.post('/signin', authLimiter, validateSchema(signInSchema), authController.signIn);
-  router.post('/signout', authLimiter, authController.signOut);
+  router.post('/signup', validateSchema(signUpSchema), authController.signUp);
+  router.post('/signin', validateSchema(signInSchema), authController.signIn);
+  router.post('/signout', authController.signOut);
   
   router.get('/me', authMiddleware.authenticate, (req, res) => {
     res.json({

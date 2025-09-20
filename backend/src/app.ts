@@ -4,8 +4,8 @@ import cors from "cors";
 import { env } from "./config/env";
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import { limiter } from "./utils";
 import { errorHandler, notFound } from "./middleware/implementation/errorHandler";
-import { limiter } from './utils/rate-limiter';
 import { createAuthRoutes, createUrlRoutes } from "./routes";
 
 

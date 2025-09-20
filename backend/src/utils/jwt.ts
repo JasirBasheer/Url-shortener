@@ -6,24 +6,14 @@ export function generateAccessToken(payload: Omit<TokenPayload, 'type'>): string
   return jwt.sign(
     { ...payload, type: 'access' },
     env.JWT.ACCESS_SECRET,
-    { expiresIn: env.JWT.ACCESS_EXPIRES_IN }
+    { expiresIn: "15m" }
   );
 }
 
 
 export function generateTokenPair(payload: Omit<TokenPayload, 'type'>): TokenPair {
-  const accessToken = jwt.sign(
-    { ...payload, type: 'access' },
-    env.JWT.ACCESS_SECRET,
-    { expiresIn: env.JWT.ACCESS_EXPIRES_IN }
-  );
-
-  const refreshToken = jwt.sign(
-    { ...payload, type: 'refresh' },
-    env.JWT.REFRESH_SECRET,
-    { expiresIn: env.JWT.REFRESH_EXPIRES_IN }
-  );
-
+  const accessToken = jwt.sign( { ...payload, type: 'access' }, env.JWT.ACCESS_SECRET, { expiresIn: "15m" });
+  const refreshToken = jwt.sign( { ...payload, type: 'refresh' }, env.JWT.REFRESH_SECRET, { expiresIn: "7d" });
   return { accessToken, refreshToken };
 }
 

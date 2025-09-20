@@ -9,13 +9,13 @@ export class JwtServiceImpl implements IJwtService {
     const accessToken = jwt.sign(
       { ...payload, type: 'access' },
       env.JWT.ACCESS_SECRET,
-      { expiresIn: env.JWT.ACCESS_EXPIRES_IN }
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
       { ...payload, type: 'refresh' },
       env.JWT.REFRESH_SECRET,
-      { expiresIn: env.JWT.REFRESH_EXPIRES_IN }
+      { expiresIn: "7d" }
     );
 
     return { accessToken, refreshToken };
@@ -75,7 +75,7 @@ export class JwtServiceImpl implements IJwtService {
     return jwt.sign(
       { ...payload, type: 'access' },
       env.JWT.ACCESS_SECRET,
-      { expiresIn: env.JWT.ACCESS_EXPIRES_IN }
+      { expiresIn: "15m" }
     );
   }
 

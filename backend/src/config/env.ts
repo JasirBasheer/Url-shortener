@@ -2,41 +2,31 @@ import { envSchema } from '@/validators';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const { value, error } = envSchema.validate(process.env, { 
-  abortEarly: false,
-  allowUnknown: true,
-  convert: true,
-});
+const parsedEnv = envSchema.safeParse(process.env);
 
-if (error) {
-  console.error("Environment variable validation error:", error.details);
+if (!parsedEnv.success) {
+  console.error("Environment validation error:", parsedEnv.error.format());
   process.exit(1);
 }
 
 
 export const env = {
   CONFIG: {
-    PORT: value.PORT,
-    DB_URI: value.DB_URI,
-    CORS_ORIGIN: value.CORS_ORIGIN,
-    NODE_ENV: value.NODE_ENV,
+    PORT: parsedEnv.data.PORT,
+    DB_URI: parsedEnv.data.DB_URI,
+    CORS_ORIGIN: parsedEnv.data.CORS_ORIGIN,
+    NODE_ENV: parsedEnv.data.NODE_ENV,
   },
 
   JWT: {
-    ACCESS_SECRET: value.JWT_ACCESS_SECRET,
-    REFRESH_SECRET: value.JWT_REFRESH_SECRET,
-    RESET_PASSWORD_SECRET: value.JWT_RESET_PASSWORD_SECRET,
-    ACCESS_EXPIRES_IN: value.JWT_ACCESS_EXPIRES_IN,
-    REFRESH_EXPIRES_IN: value.JWT_REFRESH_EXPIRES_IN,
+    ACCESS_SECRET: parsedEnv.data.JWT_ACCESS_SECRET,
+    REFRESH_SECRET: parsedEnv.data.JWT_REFRESH_SECRET,
   },
 
   COOKIE: {
-    SECRET: value.COOKIE_SECRET,
-    SECURE: value.NODE_ENV === 'production',
-    SAME_SITE: value.NODE_ENV === 'production' ? 'strict' : 'lax',
+    SECRET: parsedEnv.data.COOKIE_SECRET,
+    SECURE: parsedEnv.data.NODE_ENV === 'production',
+    SAME_SITE: parsedEnv.data.NODE_ENV === 'production' ? 'strict' : 'lax',
   },
 
-  BASE_URLS: {
-    FRONTEND: value.FRONTEND_BASE_URL,
-  }
 };
