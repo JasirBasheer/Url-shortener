@@ -2,9 +2,10 @@ import { IUrlService } from '@/services';
 import { CreateUrlRequest } from '@/types';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
+import { IUrlController } from '../interface/IUrlController';
 
 @injectable()
-export class UrlController {
+export class UrlController implements IUrlController {
   constructor(
     @inject('IUrlService') private readonly urlService: IUrlService
   ) {}

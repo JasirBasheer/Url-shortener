@@ -3,12 +3,6 @@ import { z } from "zod";
 export const createUrlSchema = z.object({
   url: z.string()
     .url({ message: "Please provide a valid URL" }),
-
-  customShortCode: z.string()
-    .regex(/^[a-zA-Z0-9_-]+$/, { message: "Custom short code can only contain letters, numbers, hyphens, and underscores" })
-    .min(3, { message: "Custom short code must be at least 3 characters long" })
-    .max(20, { message: "Custom short code must not exceed 20 characters" })
-    .optional(),
 });
 
 export const updateUrlSchema = z.object({
@@ -50,3 +44,4 @@ export const urlQuerySchema = z.object({
 export type CreateUrlDto = z.infer<typeof createUrlSchema>;
 export type UpdateUrlDto = z.infer<typeof updateUrlSchema>;
 export type UrlQueryDto = z.infer<typeof urlQuerySchema>;
+

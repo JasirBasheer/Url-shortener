@@ -2,9 +2,10 @@ import { IUrlRepository } from "@/repositories";
 import { CreateUrlRequest, PaginatedResponse, UrlResponse } from "@/types";
 import { logInfo, logWarn, NotFoundError, ValidationError } from "@/utils";
 import { injectable, inject } from "tsyringe";
+import { IUrlService } from "../interface/IUrlService";
 
 @injectable()
-export class UrlService {
+export class UrlService implements IUrlService {
   constructor(
     @inject("IUrlRepository") private urlRepository: IUrlRepository
   ) {}
@@ -56,7 +57,7 @@ export class UrlService {
     );
 
     return {
-      data: data.urls.map((url) => ({
+      data: data.map((url) => ({
         id: url._id.toString(),
         url: url.url,
         shortCode: url.shortCode,
@@ -68,10 +69,31 @@ export class UrlService {
         updatedAt: url.updatedAt,
       })),
       pagination: {
-        total,
-        limit,
-        offset,
+        total: data.length,
+        current: offset + 1,
       },
+    };
+  }
+
+  async getUrlByShortCode(shortCode: string): Promise<UrlResponse> {
+    logInfo("GetUrlByShortCode service started", { shortCode });
+
+    const url = await this.urlRepository.findByShortCode(shortCode);
+    if (!url) {
+      logWarn("GetUrlByShortCode failed - URL not found", { shortCode });
+      throw new NotFoundError("URL not found");
+    }
+
+    return {
+      id: url._id.toString(),
+      url: url.url,
+      shortCode: url.shortCode,
+      userId: url.userId,
+      clicks: url.clicks,
+      expiresAt: url.expiresAt,
+      isActive: url.isActive,
+      createdAt: url.createdAt,
+      updatedAt: url.updatedAt,
     };
   }
 
@@ -127,6 +149,45 @@ export class UrlService {
     } catch {
       return false;
     }
+  }
+
+  async updateUrl(urlId: string, userId: string, updates: {
+    title?: string;
+    description?: string;
+    isActive?: boolean;
+    expiresAt?: Date;
+  }): Promise<UrlResponse> {
+    logInfo("UpdateUrl service started", { urlId, userId });
+
+    const url = await this.urlRepository.findById(urlId);
+    if (!url) {
+      logWarn("UpdateUrl failed - URL not found", { urlId });
+      throw new NotFoundError("URL not found");
+    }
+
+    if (url.userId !== userId) {
+      logWarn("UpdateUrl failed - unauthorized access", { urlId, userId });
+      throw new ValidationError("Unauthorized to update this URL");
+    }
+
+    const updatedUrl = await this.urlRepository.update(urlId, updates);
+    if (!updatedUrl) {
+      throw new NotFoundError("URL not found");
+    }
+
+    logInfo("UpdateUrl completed successfully", { urlId });
+
+    return {
+      id: updatedUrl._id.toString(),
+      url: updatedUrl.url,
+      shortCode: updatedUrl.shortCode,
+      userId: updatedUrl.userId,
+      clicks: updatedUrl.clicks,
+      expiresAt: updatedUrl.expiresAt,
+      isActive: updatedUrl.isActive,
+      createdAt: updatedUrl.createdAt,
+      updatedAt: updatedUrl.updatedAt,
+    };
   }
 
   private generateShortCode(): string {

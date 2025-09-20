@@ -8,8 +8,6 @@ import { limiter } from "./utils";
 import { errorHandler, notFound } from "./middleware/implementation/errorHandler";
 import { createAuthRoutes, createUrlRoutes } from "./routes";
 
-
-
 export const createApp = () => {
   const app = express();
 
@@ -27,8 +25,8 @@ export const createApp = () => {
   app.use(cookieParser());
 
 
-  app.use("/api/auth", createAuthRoutes());
-  app.use("/api/urls", createUrlRoutes());
+  app.use("/auth", createAuthRoutes());
+  app.use("/urls", createUrlRoutes());
   app.use(notFound);
   app.use(errorHandler);
 

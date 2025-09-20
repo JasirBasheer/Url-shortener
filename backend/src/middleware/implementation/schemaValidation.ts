@@ -1,29 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
-import { ValidationException } from '../../exceptions';
+import { ZodSchema } from "zod";
+import { Request, Response, NextFunction } from "express";
+import { CustomError, ValidationError } from "@/utils";
 
-export const validateSchema = (schema: Joi.ObjectSchema, target: 'body' | 'query' = 'body') => {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    const data = target === 'query' ? req.query : req.body;
-    const { error, value } = schema.validate(data, {
-      abortEarly: false,
-      stripUnknown: true,
-      convert: true
-    });
+export const validateRequest = (schema: ZodSchema) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const result = schema.safeParse(req.body);     
 
-    if (error) {
-      const errorMessages = error.details.map(detail => detail.message);
-      throw new ValidationException(
-        `Validation failed: ${errorMessages.join(', ')}`,
-        'VALIDATION_ERROR'
-      );
+      if (!result.success) {
+        const firstError = result.error.issues[0];
+        const path = firstError.path.join(".");
+        return next(new ValidationError(`${path} : ${firstError.message}`));
+      }
+      req.body = result.data;
+
+      next();
+    } catch (error) {
+      next(error);
     }
-
-    if (target === 'query') {
-      req.query = value;
-    } else {
-      req.body = value;
-    }
-    next();
   };
 };

@@ -17,7 +17,7 @@ export class AuthController implements IAuthController {
   ): Promise<void> => {
     try {
       const data: SignUpRequest = req.body;
-
+      console.log("dataa",data)
       const result = await this.authService.signUp(data);
       this.setTokenCookies(res, result.tokens);
 

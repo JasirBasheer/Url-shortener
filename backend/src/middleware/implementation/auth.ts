@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
-import { IUserRepository, ILoggerService, IAuthMiddleware, IJwtService } from '../../repositories';
+import { IUserRepository } from '../../repositories';
+import { IAuthMiddleware } from '../interface/IAuthMiddleware';
+import { generateAccessToken, logDebug, logError, logWarn, verifyAccessToken, verifyRefreshToken } from '@/utils';
 
 declare global {
   namespace Express {
@@ -16,10 +18,8 @@ declare global {
 @injectable()
 export class AuthMiddleware implements IAuthMiddleware {
   constructor(
-    @inject('IJwtService') private jwtService: IJwtService,
-    @inject('IUserRepository') private userRepository: IUserRepository,
-    @inject('ILoggerService') private logger: ILoggerService
-  ) {}
+    @inject('IUserRepository') private userRepository: IUserRepository
+    ) {}
 
   authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -27,7 +27,7 @@ export class AuthMiddleware implements IAuthMiddleware {
       const refreshToken = req.cookies?.refreshToken;
 
       if (!accessToken && !refreshToken) {
-        this.logger.warn('Authentication failed - no tokens provided', { ip: req.ip });
+        logWarn('Authentication failed - no tokens provided', { ip: req.ip });
         res.status(401).json({
           success: false,
           message: 'Authentication required'
@@ -40,7 +40,7 @@ export class AuthMiddleware implements IAuthMiddleware {
 
       try {
         if (accessToken) {
-          payload = this.jwtService.verifyAccessToken(accessToken);
+          payload = verifyAccessToken(accessToken);
           user = await this.userRepository.findById(payload.userId);
           
           if (user) {
@@ -48,13 +48,13 @@ export class AuthMiddleware implements IAuthMiddleware {
               id: user._id,
               email: user.email
             };
-            this.logger.debug('Authentication successful with access token', { userId: user._id, ip: req.ip });
+            logDebug('Authentication successful with access token', { userId: user._id, ip: req.ip });
             next();
             return;
           }
         }
       } catch (accessTokenError) {
-        this.logger.debug('Access token verification failed, attempting refresh', { 
+        logDebug('Access token verification failed, attempting refresh', { 
           error: accessTokenError instanceof Error ? accessTokenError.message : 'Unknown error',
           ip: req.ip 
         });
@@ -62,11 +62,11 @@ export class AuthMiddleware implements IAuthMiddleware {
 
       if (refreshToken) {
         try {
-          const refreshPayload = this.jwtService.verifyRefreshToken(refreshToken);
+          const refreshPayload = verifyRefreshToken(refreshToken);
           user = await this.userRepository.findById(refreshPayload.userId);
           
           if (user) {
-            const newAccessToken = this.jwtService.generateAccessToken({
+            const newAccessToken = generateAccessToken({
               userId: user._id,
               email: user.email
             });
@@ -78,25 +78,25 @@ export class AuthMiddleware implements IAuthMiddleware {
               email: user.email
             };
 
-            this.logger.debug('Authentication successful with token refresh', { userId: user._id, ip: req.ip });
+            logDebug('Authentication successful with token refresh', { userId: user._id, ip: req.ip });
             next();
             return;
           }
         } catch (refreshTokenError) {
-          this.logger.warn('Refresh token verification failed', { 
+          logWarn('Refresh token verification failed', { 
             error: refreshTokenError instanceof Error ? refreshTokenError.message : 'Unknown error',
             ip: req.ip 
           });
         }
       }
 
-      this.logger.warn('Authentication failed - all tokens invalid', { ip: req.ip });
+      logWarn('Authentication failed - all tokens invalid', { ip: req.ip });
       res.status(401).json({
         success: false,
         message: 'Invalid or expired tokens'
       });
     } catch (error) {
-      this.logger.error('Authentication middleware error', { 
+      logError('Authentication middleware error', { 
         error: error instanceof Error ? error.message : 'Unknown error', 
         ip: req.ip 
       });

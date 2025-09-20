@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validateSchema } from '../middleware/implementation/schemaValidation';
+import { validateRequest } from '../middleware/implementation/schemaValidation';
 
 import { 
   signUpSchema, 
@@ -16,8 +16,8 @@ export const createAuthRoutes = () => {
   
   const router = Router();
   
-  router.post('/signup', validateSchema(signUpSchema), authController.signUp);
-  router.post('/signin', validateSchema(signInSchema), authController.signIn);
+  router.post('/signup', validateRequest(signUpSchema), authController.signUp);
+  router.post('/signin', validateRequest(signInSchema), authController.signIn);
   router.post('/signout', authController.signOut);
   
   router.get('/me', authMiddleware.authenticate, (req, res) => {

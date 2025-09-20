@@ -57,3 +57,4 @@ export interface UrlQueryParams {
   sortBy?: 'createdAt' | 'clicks' | 'url' | 'shortCode';
   sortOrder?: 'asc' | 'desc';
 }
+

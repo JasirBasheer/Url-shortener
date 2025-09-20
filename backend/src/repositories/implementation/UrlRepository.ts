@@ -6,7 +6,7 @@ import { BaseRepository } from './BaseRepository';
 import { logError, logInfo } from '@/utils';
 
 @injectable()
-export class UrlRepository extends BaseRepository<IUrl> implements IUrlRepository {
+export class UrlRepository extends BaseRepository<IUrlDocument> implements IUrlRepository {
 
   constructor(
     @inject('UrlModel') urlModel: Model<IUrlDocument>,
@@ -14,7 +14,7 @@ export class UrlRepository extends BaseRepository<IUrl> implements IUrlRepositor
     super(urlModel);
   }
 
-  async create(url: Partial<IUrl>): Promise<IUrl> {
+  async create(url: Partial<IUrlDocument>): Promise<IUrlDocument> {
     try {
       const newUrl = new this.model(url);
       const savedUrl = await newUrl.save();
@@ -31,7 +31,7 @@ export class UrlRepository extends BaseRepository<IUrl> implements IUrlRepositor
     }
   }
 
-  async findByShortCode(shortCode: string): Promise<IUrl | null> {
+  async findByShortCode(shortCode: string): Promise<IUrlDocument | null> {
     try {
       return await this.model.findOne({ shortCode }).exec();
     } catch (error) {
@@ -43,18 +43,18 @@ export class UrlRepository extends BaseRepository<IUrl> implements IUrlRepositor
     }
   }
 
-  async findByUserId(userId: string,search: string, limit?: number, offset?: number): Promise<IUrl[]> {
+  async findByUserId(userId: string, search: string, limit?: number, offset?: number): Promise<IUrlDocument[]> {
     try {
-  const filters: Record<string, any> = {};
-  
-  if (search) {
-    filters.$or = [
-      { url: { $regex: search, $options: 'i' } },
-      { shortCode: { $regex: search, $options: 'i' } }
-    ];
-  }
+      const filters: Record<string, any> = { userId };
+      
+      if (search) {
+        filters.$or = [
+          { url: { $regex: search, $options: 'i' } },
+          { shortCode: { $regex: search, $options: 'i' } }
+        ];
+      }
 
-  return this.findAll(filters, limit, offset, { createdAt: -1 });
+      return this.findAll(filters, limit, offset, { createdAt: -1 });
 
     } catch (error) {
       logError('Failed to find URLs by user ID', { 

@@ -96,3 +96,4 @@ export const useTopUrls = (limit: number = 10) => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
+
