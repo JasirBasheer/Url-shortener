@@ -1,21 +1,22 @@
 import { SignInDto, SignUpDto } from '@/dto';
+import { IUserDocument } from '@/models';
 import { IUserRepository } from '@/repositories';
 import { AuthResponse } from '@/types';
-import { ConflictError, generateTokenPair, hashPassword, logInfo, logWarn } from '@/utils';
+import { AuthenticationError, comparePassword, ConflictError, generateTokens, hashPassword, logInfo, logWarn } from '@/utils';
 import { injectable, inject } from 'tsyringe';
+import { IAuthService } from '../interface/IAuthService';
 
 @injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
     @inject('IUserRepository') private userRepository: IUserRepository,
   ) {}
 
   async signUp(dto: SignUpDto): Promise<AuthResponse> {
-    logInfo('SignUp service started', { email: dto.email });
 
     const existingUser = await this.userRepository.findByEmail(dto.email);
     if (existingUser) {
-      logWarn('SignUp failed - user already exists', { email: dto.email });
+      logWarn('user already exists', { email: dto.email });
       throw new ConflictError('User with this email already exists');
     }
 
@@ -27,16 +28,14 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const tokens = generateTokenPair({
+    const tokens = generateTokens({
       userId: newUser._id.toString(),
       email: newUser.email,
     });
 
-    logInfo('SignUp completed successfully', { userId: newUser._id });
-
     return {
       user: {
-        id: newUser._id,
+        id: newUser._id.toString(),
         name: newUser.name,
         email: newUser.email,
       },
@@ -48,32 +47,27 @@ export class AuthService {
   }
 
   async signIn(dto: SignInDto): Promise<AuthResponse> {
-    logInfo('SignIn service started', { email: dto.email });
-    
-   
 
-    const user: IUser | null = await this.userRepository.find(dto.email);
+    const user: IUserDocument | null = await this.userRepository.findByEmail(dto.email);
     if (!user) {
       logWarn('SignIn failed - user not found', { email: dto.email });
-      throw new AuthenticationException('Invalid email or password', 'INVALID_CREDENTIALS');
+      throw new AuthenticationError('Invalid email or password');
     }
 
-    const isPasswordValid = await this.passwordService.comparePassword(dto.password, user.password);
+    const isPasswordValid = await comparePassword(dto.password, user.password);
     if (!isPasswordValid) {
       logWarn('SignIn failed - invalid password', { email: dto.email });
-      throw new AuthenticationException('Invalid email or password', 'INVALID_CREDENTIALS');
+      throw new AuthenticationError('Invalid email or password');
     }
 
-    const tokens = this.jwtService.generateTokenPair({
-      userId: user._id,
+    const tokens = generateTokens({
+      userId: user._id.toString(),
       email: user.email,
     });
 
-    logInfo('SignIn completed successfully', { userId: user._id });
-
     return {
       user: {
-        id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
       },
@@ -84,56 +78,17 @@ export class AuthService {
     };
   }
 
-  async refreshToken(dto: RefreshTokenDTO): Promise<AuthResponse> {
-    logInfo('RefreshToken service started');
-    
-    const validationErrors = dto.validate();
-    if (validationErrors.length > 0) {
-      logWarn('RefreshToken validation failed', { errors: validationErrors });
-      throw new ValidationException(`Validation failed: ${validationErrors.join(', ')}`, 'VALIDATION_ERROR');
-    }
 
-    const tokenPayload = this.jwtService.verifyRefreshToken(dto.refreshToken);
-
-    const user = await this.userRepository.findById(tokenPayload.userId);
-    if (!user) {
-      logWarn('RefreshToken failed - user not found', { userId: tokenPayload.userId });
-      throw new AuthenticationException('User not found', 'USER_NOT_FOUND');
-    }
-
-    const tokens = this.jwtService.generateTokenPair({
-      userId: user._id,
-      email: user.email,
-    });
-
-    logInfo('RefreshToken completed successfully', { userId: user._id });
-
-    return {
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-      tokens: {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      },
-    };
-  }
-
-  async getCurrentUser(userId: string): Promise<{ id: string; name: string; email: string } | null> {
-    logInfo('GetCurrentUser service started', { userId });
+  async getUser(userId: string): Promise<{ id: string; name: string; email: string } | null> {
     
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      logWarn('GetCurrentUser failed - user not found', { userId });
+      logWarn('user not found', { userId });
       return null;
     }
 
-    logInfo('GetCurrentUser completed successfully', { userId });
-
     return {
-      id: user._id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
     };

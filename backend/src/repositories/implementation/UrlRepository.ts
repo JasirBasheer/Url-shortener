@@ -43,27 +43,27 @@ export class UrlRepository extends BaseRepository<IUrl> implements IUrlRepositor
     }
   }
 
-  // async findByUserId(userId: string, limit?: number, offset?: number): Promise<IUrl[]> {
-  //   try {
-  // const filters: Record<string, any> = {};
+  async findByUserId(userId: string,search: string, limit?: number, offset?: number): Promise<IUrl[]> {
+    try {
+  const filters: Record<string, any> = {};
   
-  // if (search) {
-  //   filters.$or = [
-  //     { url: { $regex: search, $options: 'i' } },
-  //     { shortCode: { $regex: search, $options: 'i' } }
-  //   ];
-  // }
+  if (search) {
+    filters.$or = [
+      { url: { $regex: search, $options: 'i' } },
+      { shortCode: { $regex: search, $options: 'i' } }
+    ];
+  }
 
-  // return this.findAll(filters, limit, offset, { createdAt: -1 });
+  return this.findAll(filters, limit, offset, { createdAt: -1 });
 
-  //   } catch (error) {
-  //     logError('Failed to find URLs by user ID', { 
-  //       error: error instanceof Error ? error.message : 'Unknown error',
-  //       userId 
-  //     });
-  //     throw new Error('Failed to find URLs by user ID');
-  //   }
-  // }
+    } catch (error) {
+      logError('Failed to find URLs by user ID', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId 
+      });
+      throw new Error('Failed to find URLs by user ID');
+    }
+  }
 
   async isShortCodeExists(shortCode: string): Promise<boolean> {
     try {

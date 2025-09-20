@@ -4,5 +4,5 @@ import { AuthResponse } from "@/types/auth";
 export interface IAuthService {
   signUp(dto: SignUpDto): Promise<AuthResponse>;
   signIn(dto: SignInDto): Promise<AuthResponse>;
-  getCurrentUser(userId: string): Promise<{ id: string; name: string; email: string } | null>;
+  getUser(userId: string): Promise<{ id: string; name: string; email: string } | null>;
 }

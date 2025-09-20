@@ -5,4 +5,6 @@ export interface IUrl {
   clicks: number;
   expiresAt?: Date;
   isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

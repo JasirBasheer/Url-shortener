@@ -1,14 +1,14 @@
-import { IUrl } from "@/models";
+import { IUrlDocument } from "@/models";
 import { IBaseRepository } from "./IBaseRepository";
 
-export interface IUrlRepository extends IBaseRepository<IUrl> {
-  // findAll(filters: Record<string, unknown>, limit?: number, offset?: number): Promise<IUrl[]>;
-  create(url: Partial<IUrl>): Promise<IUrl>;
-  findById(id: string): Promise<IUrl | null>;
-  update(id: string, updates: Partial<IUrl>): Promise<IUrl | null>;
+export interface IUrlRepository extends IBaseRepository<IUrlDocument> {
+  findByUserId(userId:string,search: string, limit?: number, offset?: number): Promise<IUrlDocument[]>;
+  create(url: Partial<IUrlDocument>): Promise<IUrlDocument>;
+  findById(id: string): Promise<IUrlDocument | null>;
+  update(id: string, updates: Partial<IUrlDocument>): Promise<IUrlDocument | null>;
   delete(id: string): Promise<boolean>;
 
-  findByShortCode(shortCode: string): Promise<IUrl | null>;
+  findByShortCode(shortCode: string): Promise<IUrlDocument | null>;
   isShortCodeExists(shortCode: string): Promise<boolean>;
 
   incrementClicks(shortCode: string): Promise<void>;

@@ -11,7 +11,7 @@ export function generateAccessToken(payload: Omit<TokenPayload, 'type'>): string
 }
 
 
-export function generateTokenPair(payload: Omit<TokenPayload, 'type'>): TokenPair {
+export function generateTokens(payload: Omit<TokenPayload, 'type'>): TokenPair {
   const accessToken = jwt.sign( { ...payload, type: 'access' }, env.JWT.ACCESS_SECRET, { expiresIn: "15m" });
   const refreshToken = jwt.sign( { ...payload, type: 'refresh' }, env.JWT.REFRESH_SECRET, { expiresIn: "7d" });
   return { accessToken, refreshToken };
