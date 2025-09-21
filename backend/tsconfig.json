@@ -20,7 +20,6 @@
       "@/routes": ["./routes"],
       "@/types": ["./types"],
       "@/utils": ["./utils"],
-      "@/validators": ["./validators"],
       "@/exceptions": ["./exceptions"]
     },
     "typeRoots": [

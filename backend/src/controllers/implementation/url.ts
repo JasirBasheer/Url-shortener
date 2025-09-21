@@ -3,7 +3,6 @@ import { CreateUrlRequest } from '@/types';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
 import { IUrlController } from '../interface/IUrlController';
-import { urlQuerySchema } from '@/validators';
 import { QueryParser } from '@/utils';
 
 @injectable()

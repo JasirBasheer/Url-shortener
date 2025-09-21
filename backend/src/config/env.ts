@@ -1,4 +1,4 @@
-import { envSchema } from '@/validators';
+import { envSchema } from '../validators';
 import dotenv from 'dotenv';
 dotenv.config();
 
