@@ -9,6 +9,7 @@ declare global {
     interface Request {
       user?: {
         id: string;
+        name: string;
         email: string;
       };
     }
@@ -23,11 +24,11 @@ export class AuthMiddleware implements IAuthMiddleware {
 
   authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      let accessToken = this.getAccessTokenFromRequest(req);
+      let accessToken = req.cookies?.accessToken;
       const refreshToken = req.cookies?.refreshToken;
 
       if (!accessToken && !refreshToken) {
-        logWarn('Authentication failed - no tokens provided', { ip: req.ip });
+        logWarn('no tokens provided');
         res.status(401).json({
           success: false,
           message: 'Authentication required'
@@ -46,18 +47,15 @@ export class AuthMiddleware implements IAuthMiddleware {
           if (user) {
             req.user = {
               id: user._id,
+              name: user.name,
               email: user.email
             };
-            logDebug('Authentication successful with access token', { userId: user._id, ip: req.ip });
             next();
             return;
           }
         }
-      } catch (accessTokenError) {
-        logDebug('Access token verification failed, attempting refresh', { 
-          error: accessTokenError instanceof Error ? accessTokenError.message : 'Unknown error',
-          ip: req.ip 
-        });
+      } catch {
+        
       }
 
       if (refreshToken) {
@@ -71,14 +69,21 @@ export class AuthMiddleware implements IAuthMiddleware {
               email: user.email
             });
 
-            res.setHeader('X-New-Access-Token', newAccessToken);
+            res.cookie("accessToken", newAccessToken, {
+              httpOnly: false,
+              secure: false,
+              sameSite: "lax",
+              path: "/",
+              maxAge: 15 * 60 * 1000,
+            });
 
             req.user = {
               id: user._id,
+              name: user.name,
               email: user.email
             };
 
-            logDebug('Authentication successful with token refresh', { userId: user._id, ip: req.ip });
+            logDebug('auth successful with token refresh');
             next();
             return;
           }
@@ -90,7 +95,6 @@ export class AuthMiddleware implements IAuthMiddleware {
         }
       }
 
-      logWarn('Authentication failed - all tokens invalid', { ip: req.ip });
       res.status(401).json({
         success: false,
         message: 'Invalid or expired tokens'
@@ -107,13 +111,5 @@ export class AuthMiddleware implements IAuthMiddleware {
     }
   };
 
-  private getAccessTokenFromRequest(req: Request): string | null {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      return authHeader.substring(7);
-    }
-
-    return req.cookies?.accessToken || null;
-  };
-
+ 
 }

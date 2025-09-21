@@ -21,7 +21,6 @@ export const createUrlRoutes = () => {
 
   router.get('/user/urls', 
     authMiddleware.authenticate, 
-    validateRequest(urlQuerySchema), 
     urlController.getUserUrls
   );
 

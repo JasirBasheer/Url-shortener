@@ -23,7 +23,7 @@ const SignUpForm = () => {
 
     try {
       await signUp(formData);
-      navigate(`/user${ROUTES.USER.DASHBOARD}`);
+      navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign up failed');
     }

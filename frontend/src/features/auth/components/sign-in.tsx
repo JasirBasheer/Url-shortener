@@ -23,7 +23,7 @@ const SignInForm = () => {
 
     try {
       await signIn(formData);
-      navigate(`/user${ROUTES.USER.DASHBOARD}`);
+      navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed');
     }
@@ -60,15 +60,8 @@ const SignInForm = () => {
             type="password"
             value={formData.password}
             onChange={handleChange("password")}
-          >
-            <a
-              href="#"
-              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
-          </CustomInput>
-
+            />
+            
           <div className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Signing in...' : 'Sign in'}

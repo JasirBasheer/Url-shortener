@@ -3,57 +3,18 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { urlService } from '@/features/url/services/urlService';
 
 export const Landing = () => {
   const [url, setUrl] = useState('');
-  const [shortUrl, setShortUrl] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
 
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // For public use, we'll create a simple short URL without authentication
-      // This would need a public endpoint on the backend
-      const response = await fetch('/api/urls/create-public', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setShortUrl(result.data.shortCode);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to create short URL');
-      }
-    } catch (err) {
-      setError('Failed to create short URL. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    // Since there's no public URL creation endpoint, redirect to sign in
+    window.location.href = '/auth/sign-in';
   };
 
-  const handleCopyUrl = async () => {
-    if (shortUrl) {
-      try {
-        const fullShortUrl = urlService.getShortUrl(shortUrl);
-        await urlService.copyToClipboard(fullShortUrl);
-        // You could add a toast notification here
-      } catch (error) {
-        console.error('Failed to copy URL:', error);
-      }
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -88,30 +49,14 @@ export const Landing = () => {
                     className="flex-1"
                     required
                   />
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Shortening...' : 'Shorten'}
+                  <Button type="submit">
+                    Sign In
                   </Button>
                 </div>
                 
-                {error && (
-                  <div className="text-red-600 text-sm">{error}</div>
-                )}
-                
-                {shortUrl && (
-                  <div className="mt-4 p-4 bg-green-50 rounded-md">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">Your short URL:</p>
-                        <p className="font-mono text-green-800">
-                          {urlService.getShortUrl(shortUrl)}
-                        </p>
-                      </div>
-                      <Button onClick={handleCopyUrl} size="sm" variant="outline">
-                        Copy
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                <p className="text-sm text-gray-600 text-center">
+                  Sign in to create and manage your short URLs
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -161,11 +106,11 @@ export const Landing = () => {
               Sign up for a free account to manage your URLs, view detailed analytics, and more.
             </p>
             <div className="space-x-4">
-              <Link to="/auth/sign-up">
-                <Button>Sign Up Free</Button>
-              </Link>
               <Link to="/auth/sign-in">
-                <Button variant="outline">Sign In</Button>
+                <Button>Sign In</Button>
+              </Link>
+              <Link to="/auth/sign-up">
+                <Button variant="outline">Sign Up</Button>
               </Link>
             </div>
           </div>

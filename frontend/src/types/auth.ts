@@ -1,10 +1,9 @@
-import type { User } from "@/features/auth/services/authService";
 import type { ReactNode } from "react";
+import type { User } from "./user";
 
 
 export interface AuthResponse {
   user: User;
-  accessToken: string;
 }
 
 export interface SignUpRequest {

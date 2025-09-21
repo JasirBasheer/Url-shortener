@@ -3,6 +3,8 @@ import { CreateUrlRequest, PaginatedResponse, UrlResponse } from "@/types";
 import { logInfo, logWarn, NotFoundError, ValidationError } from "@/utils";
 import { injectable, inject } from "tsyringe";
 import { IUrlService } from "../interface/IUrlService";
+import { QueryDto } from "@/dto";
+import { UrlMapper } from "@/dto/outbound/url";
 
 @injectable()
 export class UrlService implements IUrlService {
@@ -30,48 +32,17 @@ export class UrlService implements IUrlService {
       expiresAt: request.expiresAt,
       isActive: true,
     });
-
-    return {
-      id: newUrl._id.toString(),
-      url: newUrl.url,
-      shortCode: newUrl.shortCode,
-      userId: newUrl.userId,
-      clicks: newUrl.clicks,
-      expiresAt: newUrl.expiresAt,
-      isActive: newUrl.isActive,
-      createdAt: newUrl.createdAt,
-      updatedAt: newUrl.updatedAt,
-    };
+    return UrlMapper.toResponse(newUrl)
   }
 
   async getUserUrls(
     userId: string,
-    limit: number = 10,
-    offset: number = 0
+    query: QueryDto
   ): Promise<PaginatedResponse<UrlResponse>> {
-    const data = await this.urlRepository.findByUserId(
-      userId,
-      "",
-      limit,
-      offset
-    );
-
+    const result = await this.urlRepository.findByUserId(userId, query);
     return {
-      data: data.map((url) => ({
-        id: url._id.toString(),
-        url: url.url,
-        shortCode: url.shortCode,
-        userId: url.userId,
-        clicks: url.clicks,
-        expiresAt: url.expiresAt,
-        isActive: url.isActive,
-        createdAt: url.createdAt,
-        updatedAt: url.updatedAt,
-      })),
-      pagination: {
-        total: data.length,
-        current: offset + 1,
-      },
+      ...result,
+      data: result.data.map((url) => UrlMapper.toResponse(url)),
     };
   }
 
@@ -83,18 +54,7 @@ export class UrlService implements IUrlService {
       logWarn("GetUrlByShortCode failed - URL not found", { shortCode });
       throw new NotFoundError("URL not found");
     }
-
-    return {
-      id: url._id.toString(),
-      url: url.url,
-      shortCode: url.shortCode,
-      userId: url.userId,
-      clicks: url.clicks,
-      expiresAt: url.expiresAt,
-      isActive: url.isActive,
-      createdAt: url.createdAt,
-      updatedAt: url.updatedAt,
-    };
+    return UrlMapper.toResponse(url)
   }
 
   async redirectToUrl(shortCode: string): Promise<string> {
@@ -130,7 +90,7 @@ export class UrlService implements IUrlService {
       throw new NotFoundError("URL not found");
     }
 
-    if (url.userId !== userId) {
+    if (url.userId !== userId.toString()) {
       logWarn("DeleteUrl failed - unauthorized access", { urlId, userId });
       throw new ValidationError("Unauthorized to delete this URL");
     }
@@ -151,12 +111,16 @@ export class UrlService implements IUrlService {
     }
   }
 
-  async updateUrl(urlId: string, userId: string, updates: {
-    title?: string;
-    description?: string;
-    isActive?: boolean;
-    expiresAt?: Date;
-  }): Promise<UrlResponse> {
+  async updateUrl(
+    urlId: string,
+    userId: string,
+    updates: {
+      title?: string;
+      description?: string;
+      isActive?: boolean;
+      expiresAt?: Date;
+    }
+  ): Promise<UrlResponse> {
     logInfo("UpdateUrl service started", { urlId, userId });
 
     const url = await this.urlRepository.findById(urlId);
@@ -177,17 +141,7 @@ export class UrlService implements IUrlService {
 
     logInfo("UpdateUrl completed successfully", { urlId });
 
-    return {
-      id: updatedUrl._id.toString(),
-      url: updatedUrl.url,
-      shortCode: updatedUrl.shortCode,
-      userId: updatedUrl.userId,
-      clicks: updatedUrl.clicks,
-      expiresAt: updatedUrl.expiresAt,
-      isActive: updatedUrl.isActive,
-      createdAt: updatedUrl.createdAt,
-      updatedAt: updatedUrl.updatedAt,
-    };
+    return UrlMapper.toResponse(updatedUrl)
   }
 
   private generateShortCode(): string {

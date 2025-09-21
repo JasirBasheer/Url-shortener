@@ -12,7 +12,7 @@ export const createApp = () => {
   const app = express();
 
   app.use(helmet());
-  app.use(limiter);
+  // app.use(limiter);
   app.use(cors({
     origin: env.CONFIG.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

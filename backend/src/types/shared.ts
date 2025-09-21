@@ -2,7 +2,6 @@
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: {
-    total: number;
-    current: number;
+    page: number, total: number, pages: number, limit: number
   };
 }
