@@ -20,15 +20,6 @@ export interface UrlResponse {
   updatedAt: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    total: number;
-    limit: number;
-    offset: number;
-    hasMore: boolean;
-  };
-}
 
 export interface UrlAnalytics {
   id: string;
@@ -57,3 +48,4 @@ export interface UrlQueryParams {
   sortBy?: 'createdAt' | 'clicks' | 'url' | 'shortCode';
   sortOrder?: 'asc' | 'desc';
 }
+

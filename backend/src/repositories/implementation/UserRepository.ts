@@ -29,7 +29,7 @@ export class UserRepository extends BaseRepository<IUserDocument> implements IUs
 
   async findByEmail(email: string): Promise<IUserDocument | null> {
     try {
-      const user = await this.model.findOne({ email: email.toLowerCase() }).select('-password').exec();
+      const user = await this.model.findOne({ email: email.toLowerCase() })
       return user ? user.toObject() : null;
     } catch (error) {
       logError('Failed to find user by email', { 

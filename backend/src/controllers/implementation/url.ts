@@ -2,9 +2,12 @@ import { IUrlService } from '@/services';
 import { CreateUrlRequest } from '@/types';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
+import { IUrlController } from '../interface/IUrlController';
+import { urlQuerySchema } from '@/validators';
+import { QueryParser } from '@/utils';
 
 @injectable()
-export class UrlController {
+export class UrlController implements IUrlController {
   constructor(
     @inject('IUrlService') private readonly urlService: IUrlService
   ) {}
@@ -46,18 +49,8 @@ export class UrlController {
   getUserUrls = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = req.user?.id;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
-
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: 'Authentication required'
-        });
-        return;
-      }
-
-      const urls = await this.urlService.getUserUrls(userId, limit, offset);
+      const query = QueryParser.parseFilterQuery(req.query);
+      const urls = await this.urlService.getUserUrls(userId, query);
       
       res.status(200).json({
         success: true,
@@ -97,8 +90,12 @@ export class UrlController {
   redirectToUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { shortCode } = req.params;
-      const originalUrl = await this.urlService.redirectToUrl(shortCode);
-      res.redirect(originalUrl);
+      const url = await this.urlService.redirectToUrl(shortCode);
+      res.status(200).json({
+        success: true,
+        message: 'URL fetched successfully',
+        data: { url }
+      });
     } catch (error) {
       next(error);
     }

@@ -53,7 +53,6 @@ export class AuthService implements IAuthService {
       logWarn('SignIn failed - user not found', { email: dto.email });
       throw new AuthenticationError('Invalid email or password');
     }
-
     const isPasswordValid = await comparePassword(dto.password, user.password);
     if (!isPasswordValid) {
       logWarn('SignIn failed - invalid password', { email: dto.email });

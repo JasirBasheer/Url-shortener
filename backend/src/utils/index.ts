@@ -3,4 +3,5 @@ export * from './error';
 export * from './jwt';
 export * from './password';
 export * from './logger';
+export * from './query-parser';
 

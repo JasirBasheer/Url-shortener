@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
-import { validateSchema } from '../middleware/implementation/schemaValidation';
+import { validateRequest } from '../middleware/implementation/schemaValidation';
 import { createUrlSchema, updateUrlSchema, urlQuerySchema } from '../validators';
 import { IUrlController } from '@/controllers';
 import { IAuthMiddleware } from '@/middleware/interface/IAuthMiddleware';
@@ -15,19 +15,18 @@ export const createUrlRoutes = () => {
   
   router.post('/create', 
     authMiddleware.authenticate, 
-    validateSchema(createUrlSchema), 
+    validateRequest(createUrlSchema), 
     urlController.createShortUrl
   );
 
   router.get('/user/urls', 
     authMiddleware.authenticate, 
-    validateSchema(urlQuerySchema, 'query'), 
     urlController.getUserUrls
   );
 
   router.put('/:urlId', 
     authMiddleware.authenticate, 
-    validateSchema(updateUrlSchema), 
+    validateRequest(updateUrlSchema), 
     urlController.updateUrl
   );
   router.delete('/:urlId', authMiddleware.authenticate, urlController.deleteUrl);
