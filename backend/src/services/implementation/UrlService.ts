@@ -1,6 +1,6 @@
 import { IUrlRepository } from "@/repositories";
 import { CreateUrlRequest, PaginatedResponse, UrlResponse } from "@/types";
-import { logInfo, logWarn, NotFoundError, ValidationError } from "@/utils";
+import { logInfo, logWarn, NotFoundError, ValidationError } from "../../utils";
 import { injectable, inject } from "tsyringe";
 import { IUrlService } from "../interface/IUrlService";
 import { QueryDto } from "@/dto";

@@ -2,7 +2,7 @@ import { SignInDto, SignUpDto } from '@/dto';
 import { IUserDocument } from '@/models';
 import { IUserRepository } from '@/repositories';
 import { AuthResponse } from '@/types';
-import { AuthenticationError, comparePassword, ConflictError, generateTokens, hashPassword, logInfo, logWarn } from '@/utils';
+import { AuthenticationError, comparePassword, ConflictError, generateTokens, hashPassword, logInfo, logWarn } from '../../utils';
 import { injectable, inject } from 'tsyringe';
 import { IAuthService } from '../interface/IAuthService';
 

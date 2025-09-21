@@ -1,6 +1,6 @@
 import { Model, Document } from "mongoose";
 import { IBaseRepository } from "../interface/IBaseRepository";
-import { logError, logInfo } from "@/utils";
+import { logError, logInfo } from "../../utils";
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   constructor(

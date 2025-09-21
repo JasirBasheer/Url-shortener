@@ -3,7 +3,7 @@ import { Model } from "mongoose";
 import { injectable, inject } from "tsyringe";
 import { IUrlRepository } from "../interface/IUrlRepository";
 import { BaseRepository } from "./BaseRepository";
-import { logError, logInfo, QueryParser } from "@/utils";
+import { logError, logInfo, QueryParser } from "../../utils";
 import { QueryDto } from "@/dto";
 import { PaginatedResponse } from "@/types";
 

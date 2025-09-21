@@ -1,4 +1,4 @@
-import { CustomError, NotFoundError } from '@/utils';
+import { CustomError, NotFoundError } from '../../utils';
 import { Request, Response, NextFunction } from 'express';
 
 export interface AppError extends Error {

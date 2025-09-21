@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import { BaseRepository } from './BaseRepository';
 import { IUserRepository } from '../interface/IUserRepository';
 import { IUserDocument } from '@/models';
-import { logError } from '@/utils';
+import { logError } from '../../utils';
 
 @injectable()
 export class UserRepository extends BaseRepository<IUserDocument> implements IUserRepository {

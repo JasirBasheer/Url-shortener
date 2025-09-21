@@ -3,7 +3,7 @@ import { CreateUrlRequest } from '@/types';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
 import { IUrlController } from '../interface/IUrlController';
-import { QueryParser } from '@/utils';
+import { QueryParser } from '../../utils';
 
 @injectable()
 export class UrlController implements IUrlController {

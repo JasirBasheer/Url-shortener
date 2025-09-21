@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
 import { IUserRepository } from '../../repositories';
 import { IAuthMiddleware } from '../interface/IAuthMiddleware';
-import { generateAccessToken, logDebug, logError, logWarn, verifyAccessToken, verifyRefreshToken } from '@/utils';
+import { generateAccessToken, logDebug, logError, logWarn, verifyAccessToken, verifyRefreshToken } from '../../utils';
 
 declare global {
   namespace Express {
