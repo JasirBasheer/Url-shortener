@@ -1,20 +1,15 @@
 # URL Shortener Application
 
-A full-stack URL shortener application built with Node.js, Express, TypeScript, React, and MongoDB. This application allows users to create short URLs, track analytics, and manage their links with a modern, responsive interface.
+A full-stack URL shortener application built with Node.js, Express, TypeScript, React, and MongoDB. This application allows users to create short URLs, track  and manage their links with a modern, responsive interface.
 
 ## Features
 
 ### Backend Features
 - **User Authentication**: JWT-based authentication with refresh tokens
 - **URL Shortening**: Create short URLs with custom codes
-- **Analytics Tracking**: Comprehensive click tracking with IP, user agent, referrer, and geographic data
 - **URL Management**: Update, delete, and bulk operations on URLs
-- **URL Expiration**: Set expiration dates for URLs
 - **Pagination**: Efficient pagination for large datasets
-- **Rate Limiting**: Protection against abuse
-- **Input Validation**: Comprehensive validation using Joi schemas
 - **Error Handling**: Centralized error handling with proper HTTP status codes
-- **Logging**: Structured logging with Winston
 - **Dependency Injection**: Clean architecture with TSyringe
 
 ### Frontend Features
@@ -22,9 +17,6 @@ A full-stack URL shortener application built with Node.js, Express, TypeScript, 
 - **Responsive Design**: Mobile-first responsive design
 - **Authentication**: Sign up, sign in, and protected routes
 - **URL Management**: Create, view, edit, and delete URLs
-- **Analytics Dashboard**: Visual analytics with charts and statistics
-- **Real-time Updates**: React Query for efficient data fetching and caching
-- **Public URL Creation**: Create short URLs without authentication
 - **Copy to Clipboard**: Easy sharing of short URLs
 - **Search and Filter**: Advanced search and sorting capabilities
 
@@ -51,131 +43,6 @@ A full-stack URL shortener application built with Node.js, Express, TypeScript, 
 - **Tailwind CSS** for styling
 - **Shadcn/ui** components
 - **Axios** for HTTP requests
-
-## Project Structure
-
-```
-├── backend/
-│   ├── src/
-│   │   ├── app.ts                 # Express app configuration
-│   │   ├── index.ts              # Server entry point
-│   │   ├── container/            # Dependency injection container
-│   │   ├── controllers/          # Request handlers
-│   │   ├── middleware/           # Express middleware
-│   │   ├── models/               # MongoDB models
-│   │   ├── repositories/         # Data access layer
-│   │   ├── routes/               # API routes
-│   │   ├── services/             # Business logic
-│   │   ├── types/                # TypeScript types and DTOs
-│   │   ├── utils/                # Utility functions
-│   │   └── validators/           # Input validation schemas
-│   ├── package.json
-│   └── tsconfig.json
-├── frontend/
-│   ├── src/
-│   │   ├── App.tsx               # Main app component
-│   │   ├── main.tsx              # App entry point
-│   │   ├── components/           # Reusable UI components
-│   │   ├── features/             # Feature-based modules
-│   │   │   ├── auth/             # Authentication feature
-│   │   │   └── url/              # URL management feature
-│   │   ├── pages/                # Page components
-│   │   ├── routes/               # Route definitions
-│   │   ├── types/                # TypeScript types
-│   │   └── lib/                  # Utility functions
-│   ├── package.json
-│   └── vite.config.ts
-└── README.md
-```
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/signup` - User registration
-- `POST /api/auth/signin` - User login
-- `POST /api/auth/signout` - User logout
-- `GET /api/auth/me` - Get current user
-
-### URLs
-- `POST /api/urls/create` - Create short URL (authenticated)
-- `POST /api/urls/create-public` - Create short URL (public)
-- `GET /api/urls/user/urls` - Get user's URLs (authenticated)
-- `PUT /api/urls/:urlId` - Update URL (authenticated)
-- `DELETE /api/urls/:urlId` - Delete URL (authenticated)
-- `POST /api/urls/bulk-delete` - Bulk delete URLs (authenticated)
-- `GET /api/urls/:shortCode` - Redirect to original URL
-- `GET /api/urls/stats/:shortCode` - Get URL statistics
-- `GET /api/urls/analytics/:shortCode` - Get URL analytics
-- `GET /api/urls/analytics/:shortCode/stats` - Get detailed analytics
-- `GET /api/urls/top` - Get top URLs
-
-## Database Schema
-
-### Users Collection
-```typescript
-{
-  _id: ObjectId,
-  name: string,
-  email: string (unique),
-  password: string (hashed),
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### URLs Collection
-```typescript
-{
-  _id: ObjectId,
-  url: string,
-  shortCode: string (unique),
-  userId: string,
-  clicks: number,
-  title?: string,
-  description?: string,
-  expiresAt?: Date,
-  isActive: boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### URL Analytics Collection
-```typescript
-{
-  _id: ObjectId,
-  urlId: string,
-  shortCode: string,
-  ipAddress: string,
-  userAgent: string,
-  referrer?: string,
-  country?: string,
-  city?: string,
-  clickedAt: Date
-}
-```
-
-## Environment Variables
-
-### Backend (.env)
-```env
-PORT=3000
-DB_URI=mongodb://localhost:27017/url-shortener
-CORS_ORIGIN=http://localhost:5173
-JWT_ACCESS_SECRET=your-access-secret
-JWT_REFRESH_SECRET=your-refresh-secret
-JWT_RESET_PASSWORD_SECRET=your-reset-secret
-JWT_ACCESS_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
-COOKIE_SECRET=your-cookie-secret
-NODE_ENV=development
-FRONTEND_BASE_URL=http://localhost:5173
-```
-
-### Frontend (.env)
-```env
-VITE_API_BASE_URL=http://localhost:3000/api
-```
 
 ## Installation and Setup
 
@@ -266,11 +133,6 @@ The application is fully responsive and works seamlessly on desktop, tablet, and
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
-
-This project is licensed under the MIT License.
-
-## Support
 
 For support or questions, please open an issue in the repository.
 
