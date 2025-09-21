@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { env } from '@/config/env';
+import { env } from '../config/env';
 import { TokenPair, TokenPayload } from '@/types';
 
 export function generateAccessToken(payload: Omit<TokenPayload, 'type'>): string {
