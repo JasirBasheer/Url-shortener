@@ -1,4 +1,4 @@
-import { IUrlService } from '@/services';
+import { IUrlService } from '../../services';
 import { CreateUrlRequest } from '@/types';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';

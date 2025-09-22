@@ -1,4 +1,4 @@
-import { IUrl, IUrlDocument } from "@/models";
+import { IUrl, IUrlDocument } from "../../models";
 import { Model } from "mongoose";
 import { injectable, inject } from "tsyringe";
 import { IUrlRepository } from "../interface/IUrlRepository";

@@ -6,8 +6,8 @@ import {
   signInSchema, 
 } from '../validators';
 import { container } from 'tsyringe';
-import { IAuthMiddleware } from '@/middleware/interface/IAuthMiddleware';
-import { IAuthController } from '@/controllers/interface/IAuthController';
+import { IAuthController } from '../controllers/interface/IAuthController';
+import { IAuthMiddleware } from '../middleware/interface/IAuthMiddleware';
 
 
 export const createAuthRoutes = () => {

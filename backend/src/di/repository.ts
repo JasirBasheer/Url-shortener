@@ -1,4 +1,4 @@
-import { IUrlRepository, IUserRepository, UrlRepository, UserRepository } from '@/repositories';
+import { IUrlRepository, IUserRepository, UrlRepository, UserRepository } from '../repositories';
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 

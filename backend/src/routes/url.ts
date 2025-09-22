@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { container } from 'tsyringe';
 import { validateRequest } from '../middleware/implementation/schemaValidation';
 import { createUrlSchema, updateUrlSchema, urlQuerySchema } from '../validators';
-import { IUrlController } from '@/controllers';
-import { IAuthMiddleware } from '@/middleware/interface/IAuthMiddleware';
+import { IUrlController } from '../controllers';
+import { IAuthMiddleware } from '../middleware/interface/IAuthMiddleware';
 
 export const createUrlRoutes = () => {
   const urlController = container.resolve<IUrlController>('IUrlController');

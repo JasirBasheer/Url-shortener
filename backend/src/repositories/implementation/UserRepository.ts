@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { injectable, inject } from 'tsyringe';
 import { BaseRepository } from './BaseRepository';
 import { IUserRepository } from '../interface/IUserRepository';
-import { IUserDocument } from '@/models';
+import { IUserDocument } from '../../models';
 import { logError } from '../../utils';
 
 @injectable()

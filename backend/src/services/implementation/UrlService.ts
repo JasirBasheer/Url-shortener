@@ -1,10 +1,10 @@
-import { IUrlRepository } from "@/repositories";
+import { IUrlRepository } from "../../repositories";
 import { CreateUrlRequest, PaginatedResponse, UrlResponse } from "@/types";
 import { logInfo, logWarn, NotFoundError, ValidationError } from "../../utils";
 import { injectable, inject } from "tsyringe";
 import { IUrlService } from "../interface/IUrlService";
 import { QueryDto } from "@/dto";
-import { UrlMapper } from "@/dto/outbound/url";
+import { UrlMapper } from "../../dto/outbound/url";
 
 @injectable()
 export class UrlService implements IUrlService {

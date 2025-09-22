@@ -1,4 +1,4 @@
-import { IUrlDocument } from "@/models";
+import { IUrlDocument } from "../../models";
 import { IBaseRepository } from "./IBaseRepository";
 import { QueryDto } from "@/dto";
 import { PaginatedResponse } from "@/types";

@@ -1,4 +1,4 @@
-import { IAuthService } from "@/services";
+import { IAuthService } from "../../services";
 import { SignInRequest, SignUpRequest } from "@/types";
 import { Request, Response, NextFunction } from "express";
 import { injectable, inject } from "tsyringe";

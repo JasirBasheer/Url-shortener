@@ -1,4 +1,4 @@
-import { IUrlDocument } from "@/models";
+import { IUrlDocument } from "../../models";
 
 export class UrlMapper {
   static toResponse(url: IUrlDocument) {
