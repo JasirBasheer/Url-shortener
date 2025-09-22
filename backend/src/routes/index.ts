@@ -1,2 +1,2 @@
-export { createAuthRoutes } from './auth';
-export { createUrlRoutes } from './url';
+export * from './auth';
+export * from './url';

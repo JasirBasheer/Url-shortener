@@ -1,23 +1,20 @@
-import 'reflect-metadata';
-import { createApp } from './app';
-import { connectDB } from './config/db';
-import { env } from './config/env';
-import { registerDependencies } from './di';
+import "reflect-metadata";
+import { createApp } from "./app";
+import { connectDB } from "./config/db";
+import { env } from "./config/env";
+import { registerDependencies } from "./di";
+import { Express } from "express-serve-static-core";
 
+let app: Express;
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    registerDependencies();
+(async () => {
+  registerDependencies();
+  await connectDB();
+  app = createApp();
 
-    const app = createApp()
-    app.listen(env.CONFIG.PORT, () => {
-      console.log(`Server is running on port ${env.CONFIG.PORT}`);
-    });
-  } catch (error) {
-    console.error("Failed to start server", error);
-    process.exit(1);
-  }
-};
+  app.listen(env.CONFIG.PORT, () => {
+    console.log(`Server is running on port ${env.CONFIG.PORT}`);
+  });
+})();
 
-startServer();
+export default app;
