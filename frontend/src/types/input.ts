@@ -7,5 +7,6 @@ export interface CustomInputProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  required?: boolean;
   children?: ReactNode;
 }

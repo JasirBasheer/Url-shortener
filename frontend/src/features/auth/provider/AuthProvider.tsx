@@ -13,14 +13,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        if (authService.isAuthenticated()) {
-          const userData = await authService.getUser();
-          console.log(userData)
-          setUser(userData);
-        }
+        // Always try to get user data - the backend will handle authentication
+        // This approach is more reliable than checking cookies on the frontend
+        const userData = await authService.getUser();
+        console.log('User authenticated:', userData);
+        setUser(userData);
       } catch (error) {
         console.error('Failed to initialize auth:', error);
-        await authService.signOut();
+        // Don't call signOut here as it might cause infinite loops
+        setUser(null);
       } finally {
         setIsLoading(false);
       }

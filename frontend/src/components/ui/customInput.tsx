@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import type { CustomInputProps } from "@/types";
 
 const CustomInput: React.FC<CustomInputProps> = React.memo(
-  ({ id, label, type = "text", placeholder, value, onChange, children }) => (
+  ({ id, label, type = "text", placeholder, value, onChange, required = false, children }) => (
     <div className="grid gap-3">
       <div className="flex items-center">
         <Label htmlFor={id}>{label}</Label>
@@ -16,7 +16,7 @@ const CustomInput: React.FC<CustomInputProps> = React.memo(
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required
+        required={required}
       />
     </div>
   )

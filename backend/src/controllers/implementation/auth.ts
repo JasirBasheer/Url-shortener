@@ -94,7 +94,17 @@ export class AuthController implements IAuthController {
   }
 
   private clearTokenCookies(res: Response): void {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", {
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
   }
 }

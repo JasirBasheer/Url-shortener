@@ -13,6 +13,10 @@ class AuthService {
     return this.accessToken;
   }
 
+  setAccessToken(token: string): void {
+    this.accessToken = token;
+  }
+
   async signUp(data: SignUpRequest): Promise<AuthResponse> {
     try {
       const response = await api.post('/auth/signup', data);
@@ -38,7 +42,9 @@ class AuthService {
   async signOut(): Promise<void> {
     try {
       await api.post('/auth/signout');
-      this.accessToken = null; 
+      this.accessToken = null;
+      // Clear the access token cookie on the frontend as well
+      Cookies.remove('accessToken');
     } catch (error: unknown) {
       throw new Error(extractError(error, 'Sign out failed'));
     }
@@ -54,7 +60,9 @@ class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!Cookies.get('accessToken');
+    // Check for access token cookie
+    const accessToken = Cookies.get('accessToken');
+    return !!accessToken;
   }
 }
 
