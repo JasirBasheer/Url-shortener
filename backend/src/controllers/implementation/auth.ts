@@ -78,8 +78,8 @@ export class AuthController implements IAuthController {
   ): void {
     res.cookie("accessToken", tokens.accessToken, {
       httpOnly: false,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       path: "/",
       maxAge: 15 * 60 * 1000,
     });
@@ -87,7 +87,7 @@ export class AuthController implements IAuthController {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });

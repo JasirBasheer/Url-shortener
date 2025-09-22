@@ -24,6 +24,7 @@ export class AuthMiddleware implements IAuthMiddleware {
 
   authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      logDebug(`${req.cookies} req.cookies`)
       let accessToken = req.cookies?.accessToken;
       const refreshToken = req.cookies?.refreshToken;
 
@@ -71,8 +72,8 @@ export class AuthMiddleware implements IAuthMiddleware {
 
             res.cookie("accessToken", newAccessToken, {
               httpOnly: false,
-              secure: false,
-              sameSite: "lax",
+              secure: true,
+              sameSite: "none",
               path: "/",
               maxAge: 15 * 60 * 1000,
             });
