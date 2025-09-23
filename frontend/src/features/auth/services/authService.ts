@@ -43,7 +43,6 @@ class AuthService {
     try {
       await api.post('/auth/signout');
       this.accessToken = null;
-      // Clear the access token cookie on the frontend as well
       Cookies.remove('accessToken');
     } catch (error: unknown) {
       throw new Error(extractError(error, 'Sign out failed'));
@@ -60,7 +59,6 @@ class AuthService {
   }
 
   isAuthenticated(): boolean {
-    // Check for access token cookie
     const accessToken = Cookies.get('accessToken');
     return !!accessToken;
   }

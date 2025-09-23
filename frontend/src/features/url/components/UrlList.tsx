@@ -81,7 +81,6 @@ export const UrlList: React.FC = () => {
         <CardTitle>Your URLs</CardTitle>
       </CardHeader>
       <CardContent>
-        {/* Search */}
         <input
           type="text"
           placeholder="Search URLs..."
@@ -103,6 +102,7 @@ export const UrlList: React.FC = () => {
                   <div>
                     <p className="truncate max-w-xs">{url.url}</p>
                     <p className="text-sm text-gray-500">{url.shortCode}</p>
+                    <p className="text-sm text-gray-500">total clicks: {url.clicks}</p>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -130,8 +130,6 @@ export const UrlList: React.FC = () => {
                 </li>
               ))}
             </ul>
-
-            {/* Pagination */}
             <div className="flex justify-between items-center mt-4">
               <Button
                 size="sm"

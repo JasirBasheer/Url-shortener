@@ -1,4 +1,3 @@
-// services/urlService.ts
 import type { PaginatedResponse } from "@/types/shared";
 import { api } from "@/utils";
 
@@ -47,7 +46,7 @@ async getUserUrls(params: UrlQueryParams = {}): Promise<PaginatedResponse<UrlRes
     `/urls/user/urls?${queryParams.toString()}`
   );
 
-  return response.data.data; // backend already includes pagination
+  return response.data.data; 
 }
 
 
@@ -63,7 +62,7 @@ async getUserUrls(params: UrlQueryParams = {}): Promise<PaginatedResponse<UrlRes
 
   getShortUrl(shortCode: string): string {
     const baseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
-    return `${baseUrl}/r/${shortCode}`;
+    return `${baseUrl}/${shortCode}`;
   }
 
   async copyToClipboard(text: string): Promise<void> {

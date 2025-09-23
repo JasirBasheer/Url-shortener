@@ -1,6 +1,6 @@
 import { ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { CustomError, ValidationError } from "../../utils";
+import { CustomError, logDebug, ValidationError } from "../../utils";
 
 export const validateRequest = (schema: ZodSchema) => {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ export const validateRequest = (schema: ZodSchema) => {
       if (!result.success) {
         const firstError = result.error.issues[0];
         const path = firstError.path.join(".");
-        return next(new ValidationError(`${path} : ${firstError.message}`));
+        return next(new ValidationError(`${firstError.message}`));
       }
       req.body = result.data;
 

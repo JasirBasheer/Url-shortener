@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { ROUTES } from "@/constants";
 
 const SignInForm = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", isSigning: false });
   const [error, setError] = useState<string | null>(null);
   const { signIn, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -19,12 +19,18 @@ const SignInForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormData((prev)=> {
+      return {...prev,isSigning: true}
+    })
     setError(null);
 
     try {
       await signIn(formData);
       navigate('/');
     } catch (err) {
+        setFormData((prev)=> {
+      return {...prev,isSigning: false}
+    })
       setError(err instanceof Error ? err.message : 'Sign in failed');
     }
   };
@@ -39,11 +45,7 @@ const SignInForm = () => {
       </CardHeader>
       <CardContent>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )}
+          
 
           <CustomInput
             id="email"
@@ -61,19 +63,26 @@ const SignInForm = () => {
             value={formData.password}
             onChange={handleChange("password")}
             />
+
+            {error && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              {error}
+            </div>
+          )}
             
           <div className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {formData.isSigning ? 'Signing in...' : 'Sign in'}
             </Button>
           </div>
 
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link to={`/auth${ROUTES.AUTH.SIGN_UP}`} className="underline underline-offset-4">
-              Sign up
+              Sign up 
             </Link>
           </div>
+
         </form>
       </CardContent>
     </Card>

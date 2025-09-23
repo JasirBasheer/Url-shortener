@@ -9,15 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { UrlResponse } from "@/types";
 import { urlService } from "../services";
 import { extractError } from "@/utils";
 
 interface CreateUrlFormProps {
-  onSuccess?: (url: UrlResponse) => void;
+  setActiveTab: (tab: string) => void;
 }
 
-export const CreateUrlForm: React.FC<CreateUrlFormProps> = ({ onSuccess }) => {
+export const CreateUrlForm: React.FC<CreateUrlFormProps> = ({ setActiveTab }) => {
   const [formData, setFormData] = useState({ url: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,9 +27,9 @@ export const CreateUrlForm: React.FC<CreateUrlFormProps> = ({ onSuccess }) => {
     setError(null);
 
     try {
-      const result = await urlService.createUrl({ url: formData.url });
+      await urlService.createUrl({ url: formData.url });
       setFormData({ url: "" });
-      onSuccess?.(result);
+      setActiveTab('list')
     } catch (err: unknown) {
       setError(extractError(err,"Failed to create URL"))
     } finally {
@@ -53,20 +52,20 @@ export const CreateUrlForm: React.FC<CreateUrlFormProps> = ({ onSuccess }) => {
       <CardHeader>
         <CardTitle>Create Short URL</CardTitle>
         <CardDescription>
-          Create a shortened URL that's easy to share and track
+          Create a shortened URL.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="url">Original URL *</Label>
+            <Label htmlFor="url">URL *</Label>
             <Input
               id="url"
               name="url"
               type="url"
               value={formData.url}
               onChange={handleInputChange}
-              placeholder="https://example.com"
+              placeholder="https://jasirbasheer.dev"
               required
               className="mt-1"
             />

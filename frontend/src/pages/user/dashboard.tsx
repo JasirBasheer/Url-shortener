@@ -44,7 +44,7 @@ const DashboardPage = () => {
           </TabsList>
 
           <TabsContent value="create" className="space-y-6">
-            <CreateUrlForm />
+            <CreateUrlForm setActiveTab={setActiveTab}/>
           </TabsContent>
 
           <TabsContent value="list" className="space-y-6">

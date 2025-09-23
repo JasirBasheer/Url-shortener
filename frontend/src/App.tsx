@@ -19,13 +19,13 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/:shortCode" element={<RedirectPage />} />
       <Route 
         path="/" 
         element={
           isAuthenticated ? <DashboardPage /> : <Navigate to="/auth/sign-in" replace />
         } 
       />
-      <Route path="/r/:shortCode" element={<RedirectPage />} />
       <Route path={`/${ROOT_ROUTES.AUTH}/*`} element={<AuthRoutes />} />
       <Route 
         path={`/${ROOT_ROUTES.USER}/*`} 

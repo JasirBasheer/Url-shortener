@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import CustomInput from "@/components/ui/customInput";
 import { memo, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
@@ -7,7 +13,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { ROUTES } from "@/constants";
 
 const SignUpForm = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState<string | null>(null);
   const { signUp, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -23,9 +33,9 @@ const SignUpForm = () => {
 
     try {
       await signUp(formData);
-      navigate('/');
+      navigate("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign up failed');
+      setError(err instanceof Error ? err.message : "Sign up failed");
     }
   };
 
@@ -39,17 +49,11 @@ const SignUpForm = () => {
       </CardHeader>
       <CardContent>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {error}
-            </div>
-          )}
-
           <CustomInput
             id="name"
             label="Name"
             type="text"
-            placeholder="John Doe"
+            placeholder="Jasir Basheeer"
             value={formData.name}
             onChange={handleChange("name")}
             required
@@ -72,17 +76,26 @@ const SignUpForm = () => {
             value={formData.password}
             onChange={handleChange("password")}
             required
-         />
+          />
+
+          {error && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              {error}
+            </div>
+          )}
 
           <div className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
           </div>
 
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to={`/auth${ROUTES.AUTH.SIGN_IN}`} className="underline underline-offset-4">
+            <Link
+              to={`/auth${ROUTES.AUTH.SIGN_IN}`}
+              className="underline underline-offset-4"
+            >
               Sign In
             </Link>
           </div>

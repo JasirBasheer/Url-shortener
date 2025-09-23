@@ -53,7 +53,7 @@ export class UrlRepository
       const { page, limit, sortBy, sortOrder } = query;
       const filter = QueryParser.buildFilter({
         searchText: query.query,
-        searchFields: ["url"],
+        searchFields: ["url","shortCode"],
         additionalFilters: { userId },
       });
 
